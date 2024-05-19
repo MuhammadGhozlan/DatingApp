@@ -37,5 +37,11 @@ namespace API.Controllers
                 return BadRequest("User Not Found");
             
         }
+        [HttpGet]
+        public async Task<ActionResult> Nothing()
+        {
+            return Ok();
+
+        }
     }
 }
