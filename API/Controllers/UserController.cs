@@ -40,7 +40,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult> Nothing()
         {
-            return Ok();
+            return Ok("Hello World");
 
         }
     }
