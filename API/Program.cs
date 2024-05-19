@@ -11,36 +11,36 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(options=>options.UseSqlite(
+builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 builder.Services.AddCors(options => options.AddPolicy("DatingApp", builder =>
 {
     builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
 }));
-var signInKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["signInKey"]));
+var signInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["signInKey"]));
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme=JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme=JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(cfg =>
 {
     cfg.RequireHttpsMetadata = false;
-    cfg.SaveToken=true;
-    cfg.TokenValidationParameters=new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
     {
-        IssuerSigningKey=signInKey,
-        ValidateAudience=false,
-        ValidateIssuer=false,
-        ValidateLifetime=false,
-        ValidateIssuerSigningKey=true,
+        IssuerSigningKey = signInKey,
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ValidateLifetime = false,
+        ValidateIssuerSigningKey = true,
 
     };
 });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if(app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -61,7 +61,7 @@ var summaries = new[]
 
 app.MapGet("/weatherforecast", () =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
+    var forecast = Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
