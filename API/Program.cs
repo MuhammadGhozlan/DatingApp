@@ -16,7 +16,7 @@ builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(
     ));
 builder.Services.AddCors(options => options.AddPolicy("DatingApp", builder =>
 {
-    builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
 }));
 var signInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["signInKey"]));
 builder.Services.AddAuthentication(options =>
@@ -40,43 +40,17 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
 if(app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseAuthentication();
 }
-app.UseRouting();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
-app.UseHttpsRedirection();
 app.UseCors("DatingApp");
+app.UseHttpsRedirection();
+app.UseAuthorization();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

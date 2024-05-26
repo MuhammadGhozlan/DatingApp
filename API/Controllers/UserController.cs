@@ -15,7 +15,7 @@ namespace API.Controllers
         {
             this.dataContext = dataContext;
         }
-        [HttpGet]
+        [HttpGet("Get")]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
             var Users = await dataContext.AppUsers.ToListAsync();
